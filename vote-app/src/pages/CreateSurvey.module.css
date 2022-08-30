@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+.formGroup input {
+  display: block;
+}
+.button {
+  margin-top: 10px;
+  width: 50;
+  margin-left: 50px;
+  margin-right: auto;
+}
