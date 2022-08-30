@@ -1,24 +1,16 @@
 import "./App.css";
-import CreateSurvey from "./pages/CreateSurvey";
-import VotingPage from "./pages/VotingPage";
-import { useState } from "react";
+
 import OptionsContextProvider from "./store/option-context";
-
+import { BrowserRouter as Router } from "react-router-dom";
+import Routing from "./pages/Routes";
 function App() {
-  const [questionIsCreated, setQuestionIsCreated] = useState<boolean>(false);
-
-  const askQuestion = () => {
-    setQuestionIsCreated(true);
-  };
   return (
     <OptionsContextProvider>
-      <div className="App">
-        {!questionIsCreated ? (
-          <CreateSurvey askQusetion={askQuestion} />
-        ) : (
-          <VotingPage />
-        )}
-      </div>
+      <Router>
+        <div className="App">
+          <Routing />
+        </div>
+      </Router>
     </OptionsContextProvider>
   );
 }

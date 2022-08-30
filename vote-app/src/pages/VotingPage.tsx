@@ -1,6 +1,7 @@
 import styles from "./VotingPage.module.css";
 import { Button, Card, Form, Container, FormGroup } from "react-bootstrap";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState, useContext } from "react";
+import { OptionsContext } from "../store/option-context";
 
 const DUMMY_CONTENT = [
   { text: "Vaucher", id: "1" },
@@ -9,6 +10,7 @@ const DUMMY_CONTENT = [
 ];
 
 const VotingPage = () => {
+  const ctx = useContext(OptionsContext);
   const [inputId, setInputId] = useState<string>("");
   const changeHandler = (event: ChangeEvent) => {
     setInputId(event.target.id);
@@ -16,23 +18,23 @@ const VotingPage = () => {
 
   const formSubmitHandler = (event: FormEvent) => {
     event.preventDefault();
-    console.log(DUMMY_CONTENT.filter((elem) => elem.id === inputId));
+    console.log(ctx.optionsArray.filter((elem) => elem.id === inputId));
   };
   return (
     <Container className={styles.container}>
       <Card className="w-50">
-        <Card.Header>Here is the question</Card.Header>
+        <Card.Header>{ctx.question}</Card.Header>
         <Card.Body>
           <Form onSubmit={formSubmitHandler}>
-            {DUMMY_CONTENT.map((option) => {
+            {ctx.optionsArray.map((option) => {
               return (
                 <Form.Group key={option.id}>
                   <Form.Label>{option.text}</Form.Label>
-                  <Form.Control
+                  <Form.Check
                     onChange={changeHandler}
                     id={option.id}
-                    type="radio"
-                  ></Form.Control>
+                    type="checkbox"
+                  ></Form.Check>
                 </Form.Group>
               );
             })}

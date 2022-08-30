@@ -12,7 +12,7 @@ import { Options } from "../models/OptionsType";
 
 import { OptionsContext } from "../store/option-context";
 
-const CreateSurvey: React.FC<{ askQusetion: () => void }> = (props) => {
+const CreateSurvey: React.FC = () => {
   const ctx = useContext(OptionsContext);
   const questionInputRef = useRef<HTMLInputElement>(null);
   const [optionsArray, setOptionsArray] = useState<Options[]>([]);
@@ -22,7 +22,6 @@ const CreateSurvey: React.FC<{ askQusetion: () => void }> = (props) => {
     const enteredQuestion = questionInputRef?.current?.value || "";
     ctx.setQuestionHandler(enteredQuestion);
     ctx.submitQuestionHandler(optionsArray);
-    props.askQusetion();
   };
 
   const optionChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
