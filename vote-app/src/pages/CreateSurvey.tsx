@@ -5,24 +5,39 @@ import {
   ChangeEvent,
   useRef,
   ReactHTML,
+  useEffect,
 } from "react";
 import { Button, Card } from "react-bootstrap";
 import styles from "./CreateSurvey.module.css";
 import { Options } from "../models/OptionsType";
-
+import { useNavigate } from "react-router-dom";
 import { OptionsContext } from "../store/option-context";
 
 const CreateSurvey: React.FC = () => {
+  const [isInitial, setIsinitial] = useState<boolean>(true);
   const ctx = useContext(OptionsContext);
   const questionInputRef = useRef<HTMLInputElement>(null);
   const [optionsArray, setOptionsArray] = useState<Options[]>([]);
   const [optionsCount, setOptionsCount] = useState<number[]>([1]);
+  const navigate = useNavigate();
   const formSubmitHandler = (event: React.FormEvent) => {
     event.preventDefault();
     const enteredQuestion = questionInputRef?.current?.value || "";
     ctx.setQuestionHandler(enteredQuestion);
     ctx.submitQuestionHandler(optionsArray);
+    ctx.setQuestionLink((Math.random() + 1).toString(36).substring(2));
   };
+
+  useEffect(() => {
+    if (isInitial) {
+      setIsinitial(false);
+      return;
+    }
+    {
+      localStorage.setItem("link", `${ctx.questionLink}`);
+      navigate(`/${ctx.questionLink}`);
+    }
+  }, [ctx.questionLink]);
 
   const optionChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const objToBeAdded = { id: event.target.id, text: event.target.value };

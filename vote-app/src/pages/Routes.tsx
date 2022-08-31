@@ -1,12 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 import CreateSurvey from "./CreateSurvey";
 import VotingPage from "./VotingPage";
+import { useContext } from "react";
+import { OptionsContext } from "../store/option-context";
+const Routing: React.FC = () => {
+  const ctx = useContext(OptionsContext);
 
-const Routing: React.FC = (props) => {
   return (
     <Routes>
       <Route path="/welcome" element={<CreateSurvey />} />
-      <Route path="/question" element={<VotingPage />} />
+      <Route path={`/${ctx.questionLink}`} element={<VotingPage />} />
     </Routes>
   );
 };

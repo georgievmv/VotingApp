@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Options } from "../models/OptionsType";
 
 type OptionsContextObj = {
+  setQuestionLink: (arg: string) => void;
+  questionLink: string;
   setQuestionHandler: (arg: string) => void;
   question: string;
   optionsArray: Options[];
@@ -10,6 +12,8 @@ type OptionsContextObj = {
 };
 
 export const OptionsContext = React.createContext<OptionsContextObj>({
+  setQuestionLink: (arg: string) => {},
+  questionLink: "",
   setQuestionHandler: (arg: string) => {},
   question: "",
   optionsArray: [],
@@ -19,6 +23,7 @@ export const OptionsContext = React.createContext<OptionsContextObj>({
 const OptionsContextProvider: React.FC<{ children: React.ReactNode }> = (
   props
 ) => {
+  const [questionLink, setQuestionLink] = useState<string>("");
   const [question, setQuestion] = useState<string>("");
   const [optionsArray, setOptionsArray] = useState<Options[]>([
     { text: "", id: "" },
@@ -31,6 +36,8 @@ const OptionsContextProvider: React.FC<{ children: React.ReactNode }> = (
     setQuestion(arg);
   };
   const contextValue = {
+    setQuestionLink,
+    questionLink,
     setQuestionHandler,
     question,
     optionsArray,
