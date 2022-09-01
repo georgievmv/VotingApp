@@ -12,6 +12,8 @@ import styles from "./CreateSurvey.module.css";
 import { Options } from "../models/OptionsType";
 import { useNavigate } from "react-router-dom";
 import { OptionsContext } from "../store/option-context";
+import { db } from "../firebase";
+import { doc, setDoc } from "firebase/firestore/lite";
 
 const CreateSurvey: React.FC = () => {
   const [isInitial, setIsinitial] = useState<boolean>(true);
@@ -20,6 +22,7 @@ const CreateSurvey: React.FC = () => {
   const [optionsArray, setOptionsArray] = useState<Options[]>([]);
   const [optionsCount, setOptionsCount] = useState<number[]>([1]);
   const navigate = useNavigate();
+
   const formSubmitHandler = (event: React.FormEvent) => {
     event.preventDefault();
     const enteredQuestion = questionInputRef?.current?.value || "";
@@ -34,7 +37,10 @@ const CreateSurvey: React.FC = () => {
       return;
     }
     {
-      localStorage.setItem("link", `${ctx.questionLink}`);
+      setDoc(doc(db, "links", ctx.questionLink), {
+        question: ctx.question,
+        options: ctx.optionsArray,
+      });
       navigate(`/${ctx.questionLink}`);
     }
   }, [ctx.questionLink]);
