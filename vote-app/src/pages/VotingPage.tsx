@@ -8,6 +8,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 
 const VotingPage = () => {
+  const [voted, setVoted] = useState(false);
   const { link } = useParams();
   const ctx = useContext(OptionsContext);
   const [inputId, setInputId] = useState<string>("");
@@ -21,7 +22,8 @@ const VotingPage = () => {
         try {
           let linkRef = doc(db, "links", link);
           const data = await getDoc(linkRef);
-          console.log(data?.data()?.options);
+          ctx.setQuestionHandler(data?.data()?.question);
+          ctx.submitOptionsHandler(data?.data()?.options);
         } catch (e) {
           console.log(e);
         }

@@ -13,7 +13,7 @@ import { Options } from "../models/OptionsType";
 import { useNavigate } from "react-router-dom";
 import { OptionsContext } from "../store/option-context";
 import { db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore/lite";
+import { setDoc, doc } from "firebase/firestore";
 
 const CreateSurvey: React.FC = () => {
   const [isInitial, setIsinitial] = useState<boolean>(true);
@@ -27,7 +27,7 @@ const CreateSurvey: React.FC = () => {
     event.preventDefault();
     const enteredQuestion = questionInputRef?.current?.value || "";
     ctx.setQuestionHandler(enteredQuestion);
-    ctx.submitQuestionHandler(optionsArray);
+    ctx.submitOptionsHandler(optionsArray);
     ctx.setQuestionLink((Math.random() + 1).toString(36).substring(2));
   };
 
@@ -41,12 +41,17 @@ const CreateSurvey: React.FC = () => {
         question: ctx.question,
         options: ctx.optionsArray,
       });
+      console.log(ctx.questionLink);
       navigate(`/${ctx.questionLink}`);
     }
   }, [ctx.questionLink]);
 
   const optionChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const objToBeAdded = { id: event.target.id, text: event.target.value };
+    const objToBeAdded = {
+      id: event.target.id,
+      text: event.target.value,
+      votes: 0,
+    };
     const idIsPresent = optionsArray.find(
       (elem) => elem.id === objToBeAdded.id
     );
