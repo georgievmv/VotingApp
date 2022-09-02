@@ -7,7 +7,7 @@ import {
   ReactHTML,
   useEffect,
 } from "react";
-import { Button, Card } from "react-bootstrap";
+import Button from "../UI/Button";
 import styles from "./CreateSurvey.module.css";
 import { Options } from "../models/OptionsType";
 import { useNavigate } from "react-router-dom";
@@ -76,7 +76,7 @@ const CreateSurvey: React.FC = () => {
   };
   return (
     <div className={styles.container}>
-      <Card className="p-3">
+      <div className={styles.card}>
         <form onSubmit={formSubmitHandler}>
           <div className={styles.formGroup}>
             <label>Enter your question here</label>
@@ -103,7 +103,7 @@ const CreateSurvey: React.FC = () => {
             </Button>
           </div>
         </form>
-      </Card>
+      </div>
     </div>
   );
 };
