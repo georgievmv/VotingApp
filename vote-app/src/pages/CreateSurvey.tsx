@@ -27,7 +27,7 @@ const CreateSurvey: React.FC = () => {
     event.preventDefault();
     const enteredQuestion = questionInputRef?.current?.value || "";
     ctx.setQuestionHandler(enteredQuestion);
-    ctx.submitOptionsHandler(optionsArray);
+    ctx.setOptionsArray(optionsArray);
     ctx.setQuestionLink((Math.random() + 1).toString(36).substring(2));
   };
 

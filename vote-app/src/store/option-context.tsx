@@ -8,7 +8,7 @@ type OptionsContextObj = {
   setQuestionHandler: (arg: string) => void;
   question: string;
   optionsArray: Options[];
-  submitOptionsHandler: (arg: Options[]) => void;
+  setOptionsArray: (arg: Options[] | ((arg: Options[]) => Options[])) => void;
 };
 
 export const OptionsContext = React.createContext<OptionsContextObj>({
@@ -17,7 +17,7 @@ export const OptionsContext = React.createContext<OptionsContextObj>({
   setQuestionHandler: (arg: string) => {},
   question: "",
   optionsArray: [],
-  submitOptionsHandler: (arg: Options[]) => {},
+  setOptionsArray: (arg: Options[] | ((arg: Options[]) => Options[])) => {},
 });
 
 const OptionsContextProvider: React.FC<{ children: React.ReactNode }> = (
@@ -29,9 +29,6 @@ const OptionsContextProvider: React.FC<{ children: React.ReactNode }> = (
     { text: "", id: "", votes: 0 },
   ]);
 
-  const submitOptionsHandler = (arg: Options[]) => {
-    setOptionsArray(arg);
-  };
   const setQuestionHandler = (arg: string) => {
     setQuestion(arg);
   };
@@ -41,7 +38,7 @@ const OptionsContextProvider: React.FC<{ children: React.ReactNode }> = (
     setQuestionHandler,
     question,
     optionsArray,
-    submitOptionsHandler,
+    setOptionsArray,
   };
 
   return (

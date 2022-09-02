@@ -3,8 +3,8 @@ import { Button, Card, Form, Container, FormGroup } from "react-bootstrap";
 import { ChangeEvent, FormEvent, useState, useContext } from "react";
 import { OptionsContext } from "../store/option-context";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { getDoc, doc } from "firebase/firestore";
+import { useEffect, useCallback } from "react";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 const VotingPage = () => {
@@ -13,8 +13,18 @@ const VotingPage = () => {
   const ctx = useContext(OptionsContext);
   const [inputId, setInputId] = useState<string>("");
   const changeHandler = (event: ChangeEvent) => {
-    setInputId(event.target.id);
+    if ((event.target as HTMLInputElement).checked) {
+      setInputId(event.target.id);
+    }
   };
+
+  const alreadyVoted = localStorage.getItem("voted");
+
+  useEffect(() => {
+    if (alreadyVoted) {
+      setVoted(true);
+    }
+  }, []);
   ///////////////////
   useEffect(() => {
     const getData = async () => {
@@ -23,19 +33,39 @@ const VotingPage = () => {
           let linkRef = doc(db, "links", link);
           const data = await getDoc(linkRef);
           ctx.setQuestionHandler(data?.data()?.question);
-          ctx.submitOptionsHandler(data?.data()?.options);
+          ctx.setOptionsArray(data?.data()?.options);
         } catch (e) {
           console.log(e);
         }
       }
     };
     getData();
-  });
+  }, []);
   ///////////////////////////////
+  const submitData = async (arg: {}) => {
+    if (link) {
+      let linkRef = doc(db, "links", link);
+      updateDoc(linkRef, arg);
+    }
+  };
+
   const formSubmitHandler = (event: FormEvent) => {
     event.preventDefault();
-    console.log(ctx.optionsArray.filter((elem) => elem.id === inputId));
+    ctx.setOptionsArray((prevState) => {
+      const newState = [...prevState];
+      const optionVotedFor = newState.filter((elem) => elem.id === inputId);
+      optionVotedFor[0].votes = optionVotedFor[0].votes + 1;
+      return newState;
+    });
+
+    submitData({
+      question: ctx.question,
+      options: ctx.optionsArray,
+    });
+    setVoted(true);
+    localStorage.setItem("voted", "1");
   };
+
   return (
     <Container className={styles.container}>
       <Card className="w-50">
@@ -45,8 +75,13 @@ const VotingPage = () => {
             {ctx.optionsArray.map((option) => {
               return (
                 <Form.Group key={option.id}>
-                  <Form.Label>{option.text}</Form.Label>
+                  <Form.Label>
+                    {voted
+                      ? `${option.votes} vote for ${option.text}`
+                      : `${option.text}`}
+                  </Form.Label>
                   <Form.Check
+                    disabled={voted}
                     onChange={changeHandler}
                     id={option.id}
                     type="checkbox"
@@ -54,7 +89,7 @@ const VotingPage = () => {
                 </Form.Group>
               );
             })}
-            <Button type="submit" className={"mt-2"}>
+            <Button disabled={voted} type="submit" className={"mt-2"}>
               SUBMIT ANSWEAR
             </Button>
           </Form>
