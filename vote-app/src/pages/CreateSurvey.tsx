@@ -95,7 +95,11 @@ const CreateSurvey: React.FC = () => {
             );
           })}
           <div>
-            <Button onClick={addOptionHandler} className={styles.button}>
+            <Button
+              type="button"
+              onClick={addOptionHandler}
+              className={styles.button}
+            >
               ADD OPTION
             </Button>
             <Button type="submit" className={styles.button}>

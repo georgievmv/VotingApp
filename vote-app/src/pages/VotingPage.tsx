@@ -1,12 +1,12 @@
 import styles from "./VotingPage.module.css";
-import { Button, Card, Form, Container, FormGroup } from "react-bootstrap";
+import { Card, Form, Container, FormGroup } from "react-bootstrap";
 import { ChangeEvent, FormEvent, useState, useContext } from "react";
 import { OptionsContext } from "../store/option-context";
 import { useParams } from "react-router-dom";
 import { useEffect, useCallback } from "react";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
-
+import Button from "../UI/Button";
 const VotingPage = () => {
   const [voted, setVoted] = useState(false);
   const { link } = useParams();
@@ -67,35 +67,34 @@ const VotingPage = () => {
   };
 
   return (
-    <Container className={styles.container}>
-      <Card className="w-50">
-        <Card.Header>{ctx.question}</Card.Header>
-        <Card.Body>
-          <Form onSubmit={formSubmitHandler}>
-            {ctx.optionsArray.map((option) => {
-              return (
-                <Form.Group key={option.id}>
-                  <Form.Label>
-                    {voted
-                      ? `${option.votes} vote for ${option.text}`
-                      : `${option.text}`}
-                  </Form.Label>
-                  <Form.Check
-                    disabled={voted}
-                    onChange={changeHandler}
-                    id={option.id}
-                    type="checkbox"
-                  ></Form.Check>
-                </Form.Group>
-              );
-            })}
-            <Button disabled={voted} type="submit" className={"mt-2"}>
-              SUBMIT ANSWEAR
-            </Button>
-          </Form>
-        </Card.Body>
-      </Card>
-    </Container>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h1>{ctx.question}</h1>
+
+        <Form onSubmit={formSubmitHandler}>
+          {ctx.optionsArray.map((option) => {
+            return (
+              <Form.Group key={option.id}>
+                <Form.Label>
+                  {voted
+                    ? `${option.votes} vote for ${option.text}`
+                    : `${option.text}`}
+                </Form.Label>
+                <Form.Check
+                  disabled={voted}
+                  onChange={changeHandler}
+                  id={option.id}
+                  type="checkbox"
+                ></Form.Check>
+              </Form.Group>
+            );
+          })}
+          <Button disabled={voted} type="submit" className={styles.button}>
+            SUBMIT ANSWEAR
+          </Button>
+        </Form>
+      </div>
+    </div>
   );
 };
 

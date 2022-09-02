@@ -1,13 +1,15 @@
 import React from "react";
 import "./Button.css";
 const Button: React.FC<{
-  type?: "submit";
+  disabled?: boolean;
+  type?: "submit" | "button";
   children: React.ReactNode;
   onClick?: () => void;
   className: string;
 }> = (props) => {
   return (
     <button
+      disabled={props.disabled}
       onClick={props.onClick}
       type={props.type}
       className={`button-18 ${props.className}`}
