@@ -13,6 +13,7 @@ const VotingPage = () => {
   const ctx = useContext(OptionsContext);
   const [inputId, setInputId] = useState<string>("");
   const changeHandler = (event: ChangeEvent) => {
+    console.log(event.target.id);
     if ((event.target as HTMLInputElement).checked) {
       setInputId(event.target.id);
     }
@@ -71,21 +72,24 @@ const VotingPage = () => {
       <div className={styles.card}>
         <h1>{ctx.question}</h1>
 
-        <Form onSubmit={formSubmitHandler}>
+        <Form className={styles.form} onSubmit={formSubmitHandler}>
           {ctx.optionsArray.map((option) => {
             return (
-              <Form.Group key={option.id}>
-                <Form.Label>
-                  {voted
-                    ? `${option.votes} vote for ${option.text}`
-                    : `${option.text}`}
-                </Form.Label>
-                <Form.Check
+              <Form.Group className={styles.inputGroup} key={option.id}>
+                <input
+                  name={option.id}
+                  className={styles.input}
                   disabled={voted}
                   onChange={changeHandler}
                   id={option.id}
                   type="checkbox"
-                ></Form.Check>
+                />
+                <span className={styles.check}></span>
+                <Form.Label htmlFor={option.id} className={styles.label}>
+                  {voted
+                    ? `${option.votes} vote for ${option.text}`
+                    : `${option.text}`}
+                </Form.Label>
               </Form.Group>
             );
           })}

@@ -80,13 +80,18 @@ const CreateSurvey: React.FC = () => {
         <form onSubmit={formSubmitHandler}>
           <div className={styles.formGroup}>
             <label>Enter your question here</label>
-            <input ref={questionInputRef} type="text" />
+            <input
+              className={styles.input}
+              ref={questionInputRef}
+              type="text"
+            />
           </div>
           {optionsCount.map((elem) => {
             return (
               <div key={elem.toString()} className={styles.formGroup}>
                 <label>Enter options here</label>
                 <input
+                  className={styles.input}
                   onChange={optionChangeHandler}
                   id={elem.toString()}
                   type="text"

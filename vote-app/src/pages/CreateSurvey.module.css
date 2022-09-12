@@ -23,12 +23,12 @@
   box-shadow: 11px -7px 47px 4px rgba(0, 0, 0, 0.75);
   -webkit-box-shadow: 11px -7px 47px 4px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 11px -7px 47px 4px rgba(0, 0, 0, 0.75);
-  background-color: white;
+  background-color: #d1d7dc;
 }
 label {
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
-input {
+.input {
   display: block;
   margin: 0;
   padding: 0.8rem 1.6rem;
@@ -42,7 +42,7 @@ input {
   border-radius: 0.4rem;
 }
 
-input:hover {
+.input:hover {
   box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.75);
   -webkit-box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.75);
