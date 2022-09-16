@@ -77,7 +77,7 @@ const CreateSurvey: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <form onSubmit={formSubmitHandler}>
+        <form className={styles.form} onSubmit={formSubmitHandler}>
           <div className={styles.formGroup}>
             <label>Enter your question here</label>
             <input
@@ -99,7 +99,7 @@ const CreateSurvey: React.FC = () => {
               </div>
             );
           })}
-          <div>
+          <div className={styles.btnContainer}>
             <Button
               type="button"
               onClick={addOptionHandler}

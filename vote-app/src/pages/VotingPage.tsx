@@ -13,7 +13,17 @@ const VotingPage = () => {
   const { link } = useParams();
   const ctx = useContext(OptionsContext);
   const [inputId, setInputId] = useState<string>("");
+
+  function cbChange(obj: HTMLInputElement) {
+    let cbs = document.getElementsByClassName(styles.input);
+    for (var i = 0; i < cbs.length; i++) {
+      (cbs[i] as HTMLInputElement).checked = false;
+    }
+    obj.checked = true;
+  }
+
   const changeHandler = (event: ChangeEvent) => {
+    cbChange(event.target as HTMLInputElement);
     if ((event.target as HTMLInputElement).checked) {
       setInputId(event.target.id);
     }
