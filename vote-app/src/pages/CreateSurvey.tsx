@@ -22,7 +22,7 @@ const CreateSurvey: React.FC = () => {
   const [optionsArray, setOptionsArray] = useState<Options[]>([]);
   const [optionsCount, setOptionsCount] = useState<number[]>([1]);
   const navigate = useNavigate();
-  localStorage.removeItem("voted");
+
   const formSubmitHandler = (event: React.FormEvent) => {
     event.preventDefault();
     const enteredQuestion = questionInputRef?.current?.value || "";
@@ -41,7 +41,7 @@ const CreateSurvey: React.FC = () => {
         question: ctx.question,
         options: ctx.optionsArray,
       });
-      console.log(ctx.questionLink);
+
       navigate(`/${ctx.questionLink}`);
     }
   }, [ctx.questionLink]);

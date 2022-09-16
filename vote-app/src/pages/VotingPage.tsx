@@ -8,24 +8,58 @@ import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import Button from "../UI/Button";
 const VotingPage = () => {
+  const [ip, setIp] = useState("");
   const [voted, setVoted] = useState(false);
   const { link } = useParams();
   const ctx = useContext(OptionsContext);
   const [inputId, setInputId] = useState<string>("");
   const changeHandler = (event: ChangeEvent) => {
-    console.log(event.target.id);
     if ((event.target as HTMLInputElement).checked) {
       setInputId(event.target.id);
     }
   };
 
-  const alreadyVoted = localStorage.getItem("voted");
+  useEffect(() => {
+    const regex = new RegExp(`^${ip}$`, "g");
+
+    const checkIfAlreadyVoted = async () => {
+      if (link) {
+        try {
+          let linkRef = doc(db, "links", link);
+          const data = await getDoc(linkRef);
+          const votedIpArr = data?.data()?.ip;
+          if (votedIpArr) {
+            ctx.setIpList((prevState) => {
+              return [...prevState, ...votedIpArr];
+            });
+          }
+          for (let elem in votedIpArr) {
+            if (votedIpArr[elem].match(regex)) {
+              setVoted(true);
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    };
+    checkIfAlreadyVoted();
+  }, []);
 
   useEffect(() => {
-    if (alreadyVoted) {
-      setVoted(true);
-    }
+    const getIp = async () => {
+      const response = await fetch("https://geolocation-db.com/json/");
+      const data = await response.json();
+      setIp(data.IPv4);
+    };
+
+    getIp();
   }, []);
+  useEffect(() => {
+    ctx.setIpList((prevState) => {
+      return [...prevState, ip];
+    });
+  }, [ip]);
   ///////////////////
   useEffect(() => {
     const getData = async () => {
@@ -46,7 +80,7 @@ const VotingPage = () => {
   const submitData = async (arg: {}) => {
     if (link) {
       let linkRef = doc(db, "links", link);
-      updateDoc(linkRef, arg);
+      await updateDoc(linkRef, arg);
     }
   };
 
@@ -62,9 +96,9 @@ const VotingPage = () => {
     submitData({
       question: ctx.question,
       options: ctx.optionsArray,
+      ip: ctx.ipList,
     });
     setVoted(true);
-    localStorage.setItem("voted", "1");
   };
 
   return (
