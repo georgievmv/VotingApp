@@ -8,7 +8,7 @@ import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import Button from "../UI/Button";
 const VotingPage = () => {
-  const [ip, setIp] = useState("");
+  const [ip, setIp] = useState(undefined);
   const [voted, setVoted] = useState(false);
   const { link } = useParams();
   const ctx = useContext(OptionsContext);
@@ -30,8 +30,8 @@ const VotingPage = () => {
   };
 
   useEffect(() => {
-    const regex = new RegExp(`^${ip}$`, "g");
-
+    const regex = new RegExp(`^${ip}$`);
+    console.log(ip);
     const checkIfAlreadyVoted = async () => {
       if (link) {
         try {
@@ -40,12 +40,18 @@ const VotingPage = () => {
           const votedIpArr = data?.data()?.ip;
           if (votedIpArr) {
             ctx.setIpList((prevState) => {
-              return [...prevState, ...votedIpArr];
+              const newState = [...prevState, ...votedIpArr];
+              const filteredArr = newState.filter(
+                (item, index) => newState.indexOf(item) === index
+              );
+              return filteredArr;
             });
           }
           for (let elem in votedIpArr) {
-            if (votedIpArr[elem].match(regex)) {
+            if (regex.test(votedIpArr[elem])) {
+              console.log(votedIpArr[elem]);
               setVoted(true);
+              console.log("yes");
             }
           }
         } catch (e) {
@@ -54,7 +60,7 @@ const VotingPage = () => {
       }
     };
     checkIfAlreadyVoted();
-  }, []);
+  }, [ip]);
 
   useEffect(() => {
     const getIp = async () => {
@@ -66,9 +72,11 @@ const VotingPage = () => {
     getIp();
   }, []);
   useEffect(() => {
-    ctx.setIpList((prevState) => {
-      return [...prevState, ip];
-    });
+    if (ip) {
+      ctx.setIpList((prevState) => {
+        return [...prevState, ip];
+      });
+    }
   }, [ip]);
   ///////////////////
   useEffect(() => {
@@ -108,6 +116,7 @@ const VotingPage = () => {
       options: ctx.optionsArray,
       ip: ctx.ipList,
     });
+    console.log("yes");
     setVoted(true);
   };
 
