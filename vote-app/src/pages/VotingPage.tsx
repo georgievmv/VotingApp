@@ -3,16 +3,27 @@ import { Card, Form, Container, FormGroup } from "react-bootstrap";
 import { ChangeEvent, FormEvent, useState, useContext } from "react";
 import { OptionsContext } from "../store/option-context";
 import { useParams } from "react-router-dom";
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import Button from "../UI/Button";
 const VotingPage = () => {
+  const [copied, setCopied] = useState(false);
+
   const [ip, setIp] = useState(undefined);
   const [voted, setVoted] = useState(false);
   const { link } = useParams();
   const ctx = useContext(OptionsContext);
   const [inputId, setInputId] = useState<string>("");
+  function copy() {
+    const el = document.createElement("input");
+    el.value = window.location.href;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+    setCopied(true);
+  }
 
   function cbChange(obj: HTMLInputElement) {
     let cbs = document.getElementsByClassName(styles.input);
@@ -122,6 +133,8 @@ const VotingPage = () => {
 
   return (
     <div className={styles.container}>
+      <Button onClick={copy}>{!copied ? "Copy link" : "Copied!"}</Button>
+
       <div className={styles.card}>
         <h1>{ctx.question}</h1>
 
@@ -138,7 +151,10 @@ const VotingPage = () => {
                   type="checkbox"
                 />
                 <span className={styles.check}></span>
-                <Form.Label htmlFor={option.id} className={styles.label}>
+                <Form.Label
+                  htmlFor={option.id}
+                  className={`${styles.label} m-0`}
+                >
                   {voted
                     ? `${option.votes} vote for ${option.text}`
                     : `${option.text}`}

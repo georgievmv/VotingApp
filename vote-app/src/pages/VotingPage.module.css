@@ -1,10 +1,15 @@
 .container {
   display: flex;
+  flex-direction: column;
   height: 100vh;
   align-items: center;
   justify-content: center;
 }
+.card button {
+  margin-inline: auto;
+}
 .card {
+  margin: 20px;
   width: 50%;
   border-radius: 20px;
   border: 1px black solid;
@@ -29,7 +34,7 @@
 
 .inputGroup {
   width: 100%;
-  height: fit-content;
+
   padding: 0;
   background-color: rgb(255, 255, 255);
   margin-bottom: 0px;
@@ -39,6 +44,7 @@
   height: auto;
   padding: 12px 30px;
   padding-right: 50px;
+  margin: 0px;
   width: 100%;
   display: block;
   text-align: left;
@@ -85,6 +91,8 @@
 }
 
 .input {
+  padding: 0px;
+  margin: 0px;
   width: 32px;
   height: fit-content;
   order: 1;
