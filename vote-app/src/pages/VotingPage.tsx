@@ -26,6 +26,7 @@ const VotingPage = () => {
   }
 
   function cbChange(obj: HTMLInputElement) {
+    console.log(obj);
     let cbs = document.getElementsByClassName(styles.input);
     for (var i = 0; i < cbs.length; i++) {
       (cbs[i] as HTMLInputElement).checked = false;
