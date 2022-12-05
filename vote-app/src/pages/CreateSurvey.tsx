@@ -14,15 +14,19 @@ import { useNavigate } from "react-router-dom";
 import { OptionsContext } from "../store/option-context";
 import { db } from "../firebase";
 import { setDoc, doc } from "firebase/firestore";
+import { useSearchParams } from "react-router-dom";
 
 const CreateSurvey: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams({});
   const [isInitial, setIsinitial] = useState<boolean>(true);
   const ctx = useContext(OptionsContext);
   const questionInputRef = useRef<HTMLInputElement>(null);
   const [optionsArray, setOptionsArray] = useState<Options[]>([]);
   const [optionsCount, setOptionsCount] = useState<number[]>([1]);
   const navigate = useNavigate();
-
+  useEffect(() => {
+    console.log(searchParams.get("filter"));
+  }, [searchParams]);
   const formSubmitHandler = (event: React.FormEvent) => {
     event.preventDefault();
     const enteredQuestion = questionInputRef?.current?.value || "";
@@ -76,6 +80,20 @@ const CreateSurvey: React.FC = () => {
   };
   return (
     <div className={styles.container}>
+      <button
+        onClick={() => {
+          setSearchParams({ filter: "active" });
+        }}
+      >
+        Search
+      </button>
+      <button
+        onClick={() => {
+          setSearchParams({});
+        }}
+      >
+        Reset
+      </button>
       <div className={styles.card}>
         <form className={styles.form} onSubmit={formSubmitHandler}>
           <div className={styles.formGroup}>
