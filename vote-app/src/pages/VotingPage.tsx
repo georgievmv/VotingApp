@@ -1,12 +1,12 @@
-import styles from "./VotingPage.module.css";
-import { Card, Form, Container, FormGroup } from "react-bootstrap";
-import { ChangeEvent, FormEvent, useState, useContext } from "react";
-import { OptionsContext } from "../store/option-context";
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { getDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
-import Button from "../UI/Button";
+import styles from './VotingPage.module.css';
+import { Card, Form, Container, FormGroup } from 'react-bootstrap';
+import { ChangeEvent, FormEvent, useState, useContext } from 'react';
+import { OptionsContext } from '../store/option-context';
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { getDoc, doc, updateDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import Button from '../UI/Button';
 const VotingPage = () => {
   const [copied, setCopied] = useState(false);
 
@@ -14,13 +14,13 @@ const VotingPage = () => {
   const [voted, setVoted] = useState(false);
   const { link } = useParams();
   const ctx = useContext(OptionsContext);
-  const [inputId, setInputId] = useState<string>("");
+  const [inputId, setInputId] = useState<string>('');
   function copy() {
-    const el = document.createElement("input");
+    const el = document.createElement('input');
     el.value = window.location.href;
     document.body.appendChild(el);
     el.select();
-    document.execCommand("copy");
+    document.execCommand('copy');
     document.body.removeChild(el);
     setCopied(true);
   }
@@ -43,11 +43,10 @@ const VotingPage = () => {
 
   useEffect(() => {
     const regex = new RegExp(`^${ip}$`);
-    console.log(ip);
     const checkIfAlreadyVoted = async () => {
       if (link) {
         try {
-          let linkRef = doc(db, "links", link);
+          let linkRef = doc(db, 'links', link);
           const data = await getDoc(linkRef);
           const votedIpArr = data?.data()?.ip;
           if (votedIpArr) {
@@ -63,7 +62,7 @@ const VotingPage = () => {
             if (regex.test(votedIpArr[elem])) {
               console.log(votedIpArr[elem]);
               setVoted(true);
-              console.log("yes");
+              console.log('yes');
             }
           }
         } catch (e) {
@@ -76,7 +75,7 @@ const VotingPage = () => {
 
   useEffect(() => {
     const getIp = async () => {
-      const response = await fetch("https://geolocation-db.com/json/");
+      const response = await fetch('https://geolocation-db.com/json/');
       const data = await response.json();
       setIp(data.IPv4);
     };
@@ -95,7 +94,7 @@ const VotingPage = () => {
     const getData = async () => {
       if (link) {
         try {
-          let linkRef = doc(db, "links", link);
+          let linkRef = doc(db, 'links', link);
           const data = await getDoc(linkRef);
           ctx.setQuestionHandler(data?.data()?.question);
           ctx.setOptionsArray(data?.data()?.options);
@@ -109,7 +108,7 @@ const VotingPage = () => {
   ///////////////////////////////
   const submitData = async (arg: {}) => {
     if (link) {
-      let linkRef = doc(db, "links", link);
+      let linkRef = doc(db, 'links', link);
       await updateDoc(linkRef, arg);
     }
   };
@@ -128,13 +127,12 @@ const VotingPage = () => {
       options: ctx.optionsArray,
       ip: ctx.ipList,
     });
-    console.log("yes");
     setVoted(true);
   };
 
   return (
     <div className={styles.container}>
-      <Button onClick={copy}>{!copied ? "Copy link" : "Copied!"}</Button>
+      <Button onClick={copy}>{!copied ? 'Copy link' : 'Copied!'}</Button>
 
       <div className={styles.card}>
         <h1>{ctx.question}</h1>
@@ -152,13 +150,8 @@ const VotingPage = () => {
                   type="checkbox"
                 />
                 <span className={styles.check}></span>
-                <Form.Label
-                  htmlFor={option.id}
-                  className={`${styles.label} m-0`}
-                >
-                  {voted
-                    ? `${option.votes} vote for ${option.text}`
-                    : `${option.text}`}
+                <Form.Label htmlFor={option.id} className={`${styles.label} m-0`}>
+                  {voted ? `${option.votes} vote for ${option.text}` : `${option.text}`}
                 </Form.Label>
               </Form.Group>
             );
